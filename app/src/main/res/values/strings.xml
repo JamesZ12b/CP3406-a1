@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Book Tracker</string>
+    <string name="book_title_1">Walk into the shadow</string>
+    <string name="book_author_1">Estelle Darcy</string>
+</resources>
