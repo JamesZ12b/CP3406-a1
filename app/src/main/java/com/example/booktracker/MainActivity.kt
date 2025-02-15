@@ -6,7 +6,9 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.content.contentReceiver
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -40,8 +42,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.booktracker.data.Book
 import com.example.booktracker.data.books
 import com.example.booktracker.ui.theme.BookTrackerTheme
@@ -71,7 +76,7 @@ fun BookTrackerApp() {
                 searchQuery = query
             }
             BookGrid(books, searchQuery) { book ->
-                // 处理书籍点击事件，导航到书籍详情屏幕
+
             }
         }
         BottomNavBar()
@@ -112,8 +117,10 @@ fun BookGrid(books: List<Book>, searchQuery: String, onBookClick: (Book) -> Unit
     var showAddBookDialog by remember { mutableStateOf(false) }
 
     LazyVerticalGrid(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
         columns = GridCells.Fixed(2),
-        contentPadding = PaddingValues(8.dp)
     ) {
         items(books) { book ->
             BookCard(book = book, onClick = { onBookClick(book) })
@@ -138,27 +145,40 @@ fun BookGrid(books: List<Book>, searchQuery: String, onBookClick: (Book) -> Unit
 fun BookCard(book: Book, onClick: () -> Unit) {
     Card(
         modifier = Modifier
+            .size(260.dp, 280.dp)
             .padding(8.dp)
             .clickable(onClick = onClick),
         elevation = CardDefaults.elevatedCardElevation(4.dp)
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(modifier = Modifier.padding(8.dp)) {
             Image(
                 painter = painterResource(id = book.imageResourceId),
                 contentDescription = null,
-                modifier = Modifier.size(140.dp)
+                modifier = Modifier.size(160.dp)
             )
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = stringResource(book.title))
-            Text(text = "Author: ${stringResource(book.author)}")
+            Text(
+                text = stringResource(book.title),
+                style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Row {
+                Text(text = "By ${stringResource(book.author)}",
+                    modifier = Modifier.padding(end = 6.dp),
+                    style = TextStyle(fontSize = 12.sp) )
+                Text(text = "${book.read_pages}/${book.pages}",
+                    style = TextStyle(fontSize = 12.sp) )
+            }
         }
-    }
+        }
 }
+
 
 @Composable
 fun AddBookCard(onClick: () -> Unit) {
     Card(
         modifier = Modifier
+            .size(260.dp, 280.dp)
             .padding(8.dp)
             .clickable(onClick = onClick),
         elevation = CardDefaults.elevatedCardElevation(4.dp)
@@ -170,7 +190,7 @@ fun AddBookCard(onClick: () -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Image(painter = painterResource(id = R.drawable.add), contentDescription = "Add", modifier = Modifier.size(190.dp))
+            Image(painter = painterResource(id = R.drawable.add), contentDescription = "Add", modifier = Modifier.size(196.dp))
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = "Add book", style = MaterialTheme.typography.bodyMedium)
         }
@@ -218,7 +238,7 @@ fun BottomNavBar() {
             },
             label = { Text("Books") },
             selected = true,
-            onClick = { /* Handle click */ }
+            onClick = {}
         )
         NavigationBarItem(
             icon = {
@@ -229,7 +249,7 @@ fun BottomNavBar() {
             },
             label = { Text("Explore") },
             selected = false,
-            onClick = { /* Handle click */ }
+            onClick = {}
         )
         NavigationBarItem(
             icon = {
@@ -240,7 +260,7 @@ fun BottomNavBar() {
             },
             label = { Text("Goals") },
             selected = false,
-            onClick = { /* Handle click */ }
+            onClick = {}
         )
     }
 }
