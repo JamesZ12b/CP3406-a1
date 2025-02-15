@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">Book Tracker</string>
     <string name="book_title_1">Walk into the shadow</string>
+    <string name="book_title_2">Hide and seek</string>
+    <string name="book_title_3">The Beast Is an Animal</string>
     <string name="book_author_1">Estelle Darcy</string>
+    <string name="book_author_2">Olivia Wilson</string>
+    <string name="book_author_3">Peternelle</string>
 </resources>
