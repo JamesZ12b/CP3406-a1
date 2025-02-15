@@ -117,8 +117,10 @@ fun BookGrid(books: List<Book>, searchQuery: String, onBookClick: (Book) -> Unit
     var showAddBookDialog by remember { mutableStateOf(false) }
 
     LazyVerticalGrid(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
         columns = GridCells.Fixed(2),
-        contentPadding = PaddingValues(16.dp)
     ) {
         items(books) { book ->
             BookCard(book = book, onClick = { onBookClick(book) })
@@ -142,7 +144,8 @@ fun BookGrid(books: List<Book>, searchQuery: String, onBookClick: (Book) -> Unit
 @Composable
 fun BookCard(book: Book, onClick: () -> Unit) {
     Card(
-        modifier = Modifier.size(260.dp, 280.dp)
+        modifier = Modifier
+            .size(260.dp, 280.dp)
             .padding(8.dp)
             .clickable(onClick = onClick),
         elevation = CardDefaults.elevatedCardElevation(4.dp)
@@ -163,7 +166,7 @@ fun BookCard(book: Book, onClick: () -> Unit) {
                 Text(text = "By ${stringResource(book.author)}",
                     modifier = Modifier.padding(end = 6.dp),
                     style = TextStyle(fontSize = 12.sp) )
-                Text(text = "12/${book.pages}",
+                Text(text = "${book.read_pages}/${book.pages}",
                     style = TextStyle(fontSize = 12.sp) )
             }
         }
@@ -174,7 +177,8 @@ fun BookCard(book: Book, onClick: () -> Unit) {
 @Composable
 fun AddBookCard(onClick: () -> Unit) {
     Card(
-        modifier = Modifier.size(260.dp, 280.dp)
+        modifier = Modifier
+            .size(260.dp, 280.dp)
             .padding(8.dp)
             .clickable(onClick = onClick),
         elevation = CardDefaults.elevatedCardElevation(4.dp)
