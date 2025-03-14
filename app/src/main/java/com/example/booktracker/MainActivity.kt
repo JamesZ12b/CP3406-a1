@@ -6,11 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.content.contentReceiver
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,7 +22,6 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -47,11 +43,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.booktracker.data.Book
 import com.example.booktracker.data.books
 import com.example.booktracker.ui.theme.BookTrackerTheme
-
-
+import com.example.booktracker.BookDetailScreen
 
 
 class MainActivity : ComponentActivity() {
@@ -68,22 +66,32 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun BookTrackerApp() {
+    val navController = rememberNavController() // 创建 NavController
     var searchQuery by remember { mutableStateOf("") }
-    Column(modifier = Modifier.fillMaxSize()) {
-        Column(modifier = Modifier.weight(1f)) {
-            Spacer(modifier = Modifier.height(16.dp))
-            SearchBar(searchQuery) { query ->
-                searchQuery = query
-            }
-            BookGrid(books, searchQuery) { book ->
 
+    // 主列布局
+    Column(modifier = Modifier.fillMaxSize()) {
+        NavHost(navController = navController, startDestination = "bookList") {
+            composable("bookList") {
+                Column(modifier = Modifier.weight(1f)) {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    SearchBar(searchQuery) { query ->
+                        searchQuery = query
+                    }
+                    // 传递 navController 以处理书籍点击事件进行导航
+                    BookGrid(books, searchQuery) { book ->
+                        // 当点击书籍时，使用 navController 导航到 BookDetailScreen
+                        navController.navigate("bookDetail") // 修改为根据需要传递参数
+                    }
+                }
+            }
+            composable("bookDetail") {
+                BookDetailScreen() // 导航到书籍详细信息屏幕
             }
         }
-        BottomNavBar()
-
+        BottomNavBar() // 底部导航栏
     }
 }
-
 @Composable
 fun SearchBar(query: String, onQueryChange: (String) -> Unit) {
     Row(
@@ -170,7 +178,7 @@ fun BookCard(book: Book, onClick: () -> Unit) {
                     style = TextStyle(fontSize = 12.sp) )
             }
         }
-        }
+    }
 }
 
 
